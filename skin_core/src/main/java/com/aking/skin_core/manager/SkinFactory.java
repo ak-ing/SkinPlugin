@@ -24,7 +24,7 @@ import java.util.List;
 
 /**
  * Created by Rick at 2023/3/17 23:28.
- * @Description: 构造View的工厂
+ * Description: 构造View的工厂，
  * 代理创建view的过程，实现换肤能力
  */
 public class SkinFactory implements LayoutInflater.Factory2 {
@@ -38,7 +38,7 @@ public class SkinFactory implements LayoutInflater.Factory2 {
             "android.widget.",
             "android.webkit."
     };
-
+    private static final ClassLoader BOOT_CLASS_LOADER = LayoutInflater.class.getClassLoader();
     /**
      * 用到AppCompatDelegate的onCreateView，通过mAppCompatViewInflater对象
      * 的createView方法构造AppCompat(兼容View) [AppCompatViewInflater 119行]
@@ -78,7 +78,6 @@ public class SkinFactory implements LayoutInflater.Factory2 {
         }
         return view;
     }
-
 
     @Nullable
     @Override
@@ -151,7 +150,6 @@ public class SkinFactory implements LayoutInflater.Factory2 {
         a.recycle();
     }
 
-
     private String getNeedSkinAttribute(String attrName) {
         for (String s : SkinManager.INSTANCE.mSkinAttrHolder.keySet()) {
             if (attrName.equals(s)) return s;
@@ -164,8 +162,6 @@ public class SkinFactory implements LayoutInflater.Factory2 {
             skinViewHolder.apply();
         }
     }
-
-    private static final ClassLoader BOOT_CLASS_LOADER = LayoutInflater.class.getClassLoader();
 
     private boolean verifyClassLoader(Context context, Constructor<? extends View> constructor) {
         final ClassLoader constructorLoader = constructor.getDeclaringClass().getClassLoader();

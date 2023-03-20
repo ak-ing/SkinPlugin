@@ -1,5 +1,7 @@
 package com.aking.skin_core.manager;
 
+import static com.aking.skin_core.Constants.HOOK_ASSET_NAME;
+
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -7,12 +9,14 @@ import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
 import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
 import androidx.annotation.StringRes;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
@@ -27,31 +31,35 @@ import java.util.Map;
 
 /**
  * Created by Rick at 2023/3/15 21:15.
- *
- * @Description: 去加载资源包文件，能够从中获取想要的资源
+ * <p>
+ * Description: 去加载资源包文件，能够从中获取想要的资源
  */
 public enum SkinManager {
 
     INSTANCE;
 
-    private static final int INVALID_ID = 0;
-    private static final String HOOK_ASSET_NAME = "addAssetPath";
+    public static final int INVALID_ID = 0;
+    final Map<String, ISkinMethodHolder<? extends View, ?>> mSkinAttrHolder;
     private Application mContext;
     private Resources mResources;
     private Resources appResources;
     private String mSkinPackageName;    //资源包中的包名
     private boolean mSkinGlobalEnable = true;
     private SkinActivityLifecycleCallback skinActivityLifecycleCallback;
-    final Map<String, ISkinMethodHolder<? extends View, ?>> mSkinAttrHolder;
 
     SkinManager() {
         mSkinAttrHolder = new HashMap<>();
         ISkinMethodHolder<TextView, Integer> setTextColor = TextView::setTextColor;
         ISkinMethodHolder<View, Drawable> setBackground = View::setBackground;
         ISkinMethodHolder<ImageView, Drawable> setImageDrawable = ImageView::setImageDrawable;
+        ISkinMethodHolder<View, ViewGroup.LayoutParams> setLayoutParams = View::setLayoutParams;
+        ISkinMethodHolder<TextView, CharSequence> setText = TextView::setText;
         mSkinAttrHolder.put("textColor", setTextColor);
         mSkinAttrHolder.put("background", setBackground);
         mSkinAttrHolder.put("src", setImageDrawable);
+        mSkinAttrHolder.put("layout_width", setLayoutParams);
+        mSkinAttrHolder.put("layout_height", setLayoutParams);
+        mSkinAttrHolder.put("text", setText);
     }
 
     void init(Application context) {
@@ -115,15 +123,6 @@ public enum SkinManager {
         }
     }
 
-
-    /**
-     * 设置是否启用全局换肤开关，默认为true，
-     * 可通过{app:skinEnable="boolean"}属性单独给View设置
-     */
-    public void setSkinGlobalEnable(boolean enable) {
-        mSkinGlobalEnable = enable;
-    }
-
     /**
      * 添加需要换肤的属性
      *
@@ -150,14 +149,30 @@ public enum SkinManager {
         }
     }
 
-
+    /**
+     * 是否为换肤状态
+     *
+     * @return 已换肤：true
+     */
     public boolean isSkinState() {
         return !resourceIsNull();
     }
 
-
+    /**
+     * 是否已启用全局换肤
+     *
+     * @return 全局换肤：true
+     */
     boolean isSkinGlobalEnable() {
         return mSkinGlobalEnable;
+    }
+
+    /**
+     * 设置是否启用全局换肤开关，默认为true，
+     * 可通过{app:skinEnable="boolean"}属性单独给View设置
+     */
+    public void setSkinGlobalEnable(boolean enable) {
+        mSkinGlobalEnable = enable;
     }
 
     private boolean resourceIsNull() {
@@ -183,7 +198,7 @@ public enum SkinManager {
         String entryName = appResources.getResourceEntryName(colorRes);
         int identifier = mResources.getIdentifier(entryName, typeName, mSkinPackageName);
         if (identifier == INVALID_ID) return ContextCompat.getColor(mContext, colorRes);
-        return ResourcesCompat.getColor(mResources, colorRes, null);
+        return ResourcesCompat.getColor(mResources, identifier, null);
     }
 
     /**
@@ -199,7 +214,7 @@ public enum SkinManager {
         String entryName = appResources.getResourceEntryName(drawableId);
         int identifier = mResources.getIdentifier(entryName, typeName, mSkinPackageName);
         if (identifier == INVALID_ID) return ContextCompat.getDrawable(mContext, drawableId);
-        return ResourcesCompat.getDrawable(mResources, drawableId, null);
+        return ResourcesCompat.getDrawable(mResources, identifier, null);
     }
 
 
@@ -210,7 +225,7 @@ public enum SkinManager {
         String entryName = appResources.getResourceEntryName(stringId);
         int identifier = mResources.getIdentifier(entryName, typeName, mSkinPackageName);
         if (identifier == INVALID_ID) return appResources.getString(stringId);
-        return mResources.getString(stringId);
+        return mResources.getString(identifier);
     }
 
     public float getDimension(@DimenRes int dimensionId) {
@@ -220,7 +235,26 @@ public enum SkinManager {
         String entryName = appResources.getResourceEntryName(dimensionId);
         int identifier = mResources.getIdentifier(entryName, typeName, mSkinPackageName);
         if (identifier == INVALID_ID) return appResources.getDimension(dimensionId);
-        return mResources.getDimension(dimensionId);
+        return mResources.getDimension(identifier);
+    }
+
+    /**
+     * 根据资源Id获取到皮肤包中的Id.
+     * <br/>
+     * 注意：必现使用{@link #getSkinResource()}对象，才能获取到皮肤包中的资源内容
+     *
+     * @param resId 应用内资源ID
+     * @return 皮肤包中对应的ID
+     */
+    @IdRes
+    public int getSkinResId(@IdRes int resId) {
+        if (resourceIsNull()) return resId;
+        //从应用内Resources获取资源name和资源type
+        String typeName = appResources.getResourceTypeName(resId);
+        String entryName = appResources.getResourceEntryName(resId);
+        int identifier = mResources.getIdentifier(entryName, typeName, mSkinPackageName);
+        if (identifier == INVALID_ID) return resId;
+        return identifier;
     }
 
 }

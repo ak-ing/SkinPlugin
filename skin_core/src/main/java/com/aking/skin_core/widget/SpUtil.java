@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 /**
  * Created by Rick at 2023/3/19 23:48.
  *
- * @Description: 储存皮肤包路径
+ * Description: 储存皮肤包路径
  */
 public enum SpUtil {
     INSTANCE;

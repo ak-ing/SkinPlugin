@@ -31,7 +31,7 @@ public class MainActivity2 extends SkinBaseActivity {
             if (SkinManager.INSTANCE.isSkinState()) {
                 SkinManager.INSTANCE.reset();
             } else {
-                SkinManager.INSTANCE.loadSkinFile(Environment.getExternalStorageDirectory() + "/skin.apk");
+                SkinManager.INSTANCE.loadSkinFile(Environment.getExternalStorageDirectory() + "/my-skin-debug.apk");
             }
         });
         MAdapter mAdapter = new MAdapter();

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SkinPlugin</string>
+
+    <string name="text_str_test">TextView字符资源和dimension资源</string>
 </resources>

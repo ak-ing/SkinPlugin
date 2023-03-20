@@ -14,7 +14,6 @@ import java.util.List;
 
 /**
  * Created by Rick at 2023/3/18 22:38.
- * @Description:
  */
 public class SkinActivityLifecycleCallback implements Application.ActivityLifecycleCallbacks, ISkinNotifyEvent {
     private final List<Activity> mActivities = new ArrayList<>();

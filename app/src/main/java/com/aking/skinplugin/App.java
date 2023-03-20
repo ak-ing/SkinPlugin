@@ -3,12 +3,11 @@ package com.aking.skinplugin;
 import android.app.Application;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.widget.EditText;
 
 import androidx.annotation.RequiresApi;
 
-import com.aking.skin_core.domain.SkinMethodHolder;
+import com.aking.skin_core.domain.MethodAcceptAndThen;
 import com.aking.skin_core.i.ISkinMethodHolder;
 import com.aking.skin_core.manager.SkinManager;
 
@@ -23,7 +22,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         ISkinMethodHolder<EditText, Drawable> setTextCursorDrawable = EditText::setTextCursorDrawable;
-        SkinMethodHolder<EditText, Drawable> methodHolder = setTextCursorDrawable.andThen(new ISkinMethodHolder<EditText, Drawable>() {
+        MethodAcceptAndThen<EditText, Drawable> methodHolder = setTextCursorDrawable.andThen(new ISkinMethodHolder<EditText, Drawable>() {
             @Override
             public void accept(EditText editText, Drawable drawable) {
 

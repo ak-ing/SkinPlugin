@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "SkinPlugin"
 include ':app'
 include ':skin_core'
+include ':my-skin'

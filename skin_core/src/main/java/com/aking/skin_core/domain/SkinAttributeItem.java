@@ -8,7 +8,8 @@ import com.aking.skin_core.i.ISkinMethodHolder;
 
 /**
  * Created by Rick at 2023/3/18 1:31.
- * @Description: 控件某条属性的封装
+ * <p>
+ * Description: 控件某条属性的封装
  */
 public class SkinAttributeItem {
     private final String attrName;

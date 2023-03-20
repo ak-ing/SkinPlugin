@@ -1,4 +1,4 @@
-package com.aking.skin_core;
+package com.aking.skin_core.widget;
 
 /**
  * Created by Rick on 2023-03-20  18:04.

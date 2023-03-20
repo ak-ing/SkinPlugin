@@ -1,13 +1,12 @@
 package com.aking.skin_core.manager;
 
-import static com.aking.skin_core.Constants.HOOK_ASSET_NAME;
-
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -28,6 +27,9 @@ import com.aking.skin_core.widget.SpUtil;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.util.TypedValue.TYPE_DIMENSION;
+import static com.aking.skin_core.widget.Constants.HOOK_ASSET_NAME;
 
 /**
  * Created by Rick at 2023/3/15 21:15.
@@ -234,8 +236,14 @@ public enum SkinManager {
         String typeName = appResources.getResourceTypeName(dimensionId);
         String entryName = appResources.getResourceEntryName(dimensionId);
         int identifier = mResources.getIdentifier(entryName, typeName, mSkinPackageName);
+        TypedValue typedValue = new TypedValue();
+        mResources.getValue(identifier, typedValue, true);
+        if (typedValue.type != TYPE_DIMENSION) {
+            return typedValue.getFloat();
+        }
         if (identifier == INVALID_ID) return appResources.getDimension(dimensionId);
-        return mResources.getDimension(identifier);
+        float dimension = mResources.getDimension(identifier);
+        return dimension;
     }
 
     /**

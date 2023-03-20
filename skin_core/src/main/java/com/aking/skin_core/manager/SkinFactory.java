@@ -123,6 +123,7 @@ public class SkinFactory implements LayoutInflater.Factory2 {
         if (a.getBoolean(R.styleable.skinAble_skinEnable, SkinManager.INSTANCE.isSkinGlobalEnable())) {
             List<SkinAttributeItem> skinItems = new ArrayList<>();
             for (int i = 0; i < attrs.getAttributeCount(); i++) {
+                //判断是否为需要换肤的属性
                 String attrName = getNeedSkinAttribute(attrs.getAttributeName(i));
                 if (attrName != null) {
                     //拿到Id值 @11111111
@@ -131,6 +132,8 @@ public class SkinFactory implements LayoutInflater.Factory2 {
                     int resId = Integer.parseInt(attributeValue.substring(1));
                     try {
                         String typeName = resources.getResourceTypeName(resId);
+                        //Dimension检查
+                        if (isDimenAndDisable(typeName, a)) continue;
                         String entryName = resources.getResourceEntryName(resId);
                         ISkinMethodHolder<? extends View, ?> methodHolder = SkinManager.INSTANCE.mSkinAttrHolder.get(attrName);
                         skinItems.add(new SkinAttributeItem(attrName, typeName, entryName, resId, methodHolder));
@@ -141,7 +144,7 @@ public class SkinFactory implements LayoutInflater.Factory2 {
             }
             //当存在需要换肤的属性时
             if (skinItems.size() > 0) {
-                boolean methodTag = a.getBoolean(R.styleable.skinAble_skinMethodTag, false);
+                boolean methodTag = a.getBoolean(R.styleable.skinAble_skinMethodEnable, false);
                 SkinViewHolder skinViewHolder = new SkinViewHolder(view, methodTag, skinItems);
                 mSkinViewHolders.add(skinViewHolder);
                 skinViewHolder.apply();
@@ -155,6 +158,10 @@ public class SkinFactory implements LayoutInflater.Factory2 {
             if (attrName.equals(s)) return s;
         }
         return null;
+    }
+
+    private boolean isDimenAndDisable(String typeName, TypedArray a) {
+        return "dimen".equals(typeName) && !a.getBoolean(R.styleable.skinAble_skinDimenEnable, false);
     }
 
     public void apply() {

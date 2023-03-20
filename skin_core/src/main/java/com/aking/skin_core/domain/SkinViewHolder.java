@@ -4,7 +4,6 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.arch.core.util.Function;
 
@@ -40,9 +39,6 @@ public class SkinViewHolder {
             if (mView == null) return;
             String typeName = attributeItem.getTypeName();
             ISkinMethodHolder<? extends View, ?> methodHolder = attributeItem.getAttrMethodHolder();
-            if (mView instanceof TextView) {
-                Log.d("TAG", "apply: ");
-            }
             if ("color".equals(typeName)) {
                 //如果设置的是Color类型的Drawable.
                 if (tryColorDrawable(attributeItem, methodHolder)) continue;

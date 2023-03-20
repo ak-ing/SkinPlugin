@@ -1,159 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/root"
+    <data>
+
+    </data>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@color/cardview_dark_background"
-        android:dividerPadding="10dp"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        tools:context=".MainActivity2">
-
-        <Button
-            android:id="@+id/btnChange"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginVertical="8dp"
-            android:text="换肤" />
-
-        <Button
-            android:id="@+id/btnDialog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginVertical="8dp"
-            android:text="Dialog"
-            android:textAllCaps="false" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/black"
-            android:gravity="center"
-            android:text="TextView文字颜色和背景"
-            android:textColor="@color/white"
-            android:textSize="24sp" />
-
-        <TextView
-            android:layout_width="@dimen/dimen_test1"
-            android:layout_height="@dimen/dimen_test2"
-            android:layout_gravity="center_horizontal"
-            android:background="@color/black"
-            android:gravity="center"
-            android:text="@string/text_str_test"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+        android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/root"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/black"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:background="@color/reply_blue_300"
+            android:orientation="vertical"
+            tools:context=".MainActivity2">
 
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:background="@color/white" />
-
-            <TextView
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChange"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="center|bottom"
-                android:background="@color/black"
-                android:gravity="center"
-                android:text="ImageView -> background颜色值"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="8dp"
+                android:text="换肤"
+                android:textColor="@color/reply_blue_700"
+                app:backgroundTint="@color/color_blue_50" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/black"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:background="@drawable/avatar" />
+            <Button
+                android:id="@+id/btnDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginVertical="8dp"
+                android:text="Dialog"
+                android:textAllCaps="false"
+                android:textColor="@color/reply_blue_700"
+                app:backgroundTint="@color/color_blue_50" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_gravity="center|bottom"
+                android:background="@color/reply_blue_700"
                 android:gravity="center"
-                android:text="ImageView -> background资源drawable"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/black"
-            android:orientation="vertical">
-
-            <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_gravity="center"
-                android:background="@mipmap/ic_launcher" />
+                android:text="TextView文字颜色和背景"
+                android:textColor="@color/color_blue_50"
+                android:textSize="24sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_gravity="center|bottom"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:background="@color/reply_black_900_alpha_020"
                 android:gravity="center"
-                android:text="ImageView -> background资源mipmap"
-                android:textColor="@color/white"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/black"
-            android:cursorVisible="true"
-            android:paddingVertical="16dp"
-            android:paddingStart="16dp"
-            android:text="ExitText"
-            android:textColor="@color/white"
-            android:textColorHint="@color/white"
-            android:textCursorDrawable="@color/teal_700"
-            app:skinMethodTag="true" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_gravity="center|bottom"
-                android:background="@color/black"
-                android:gravity="center"
-                android:text="RecyclerView"
+                android:text="@string/text_str_test"
                 android:textColor="@color/white"
                 android:textSize="24sp" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
-                android:background="@color/cardview_dark_background"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical"
+                android:paddingVertical="8dp">
 
-    </LinearLayout>
-</androidx.core.widget.NestedScrollView>
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:background="@color/color_blue" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center|bottom"
+                    android:gravity="center"
+                    android:text="ImageView -> background颜色值"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/avatar" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center|bottom"
+                    android:gravity="center"
+                    android:text="ImageView -> background资源drawable"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_gravity="center"
+                    android:background="@mipmap/ic_launcher" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center|bottom"
+                    android:gravity="center"
+                    android:text="ImageView -> background资源mipmap"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <EditText
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@color/reply_blue_700"
+                android:cursorVisible="true"
+                android:paddingVertical="16dp"
+                android:paddingStart="16dp"
+                android:text="ExitText"
+                android:textColor="@color/color_blue_50"
+                android:textColorHint="@color/color_blue_50"
+                android:textCursorDrawable="@color/color_blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center|bottom"
+                    android:gravity="center"
+                    android:text="RecyclerView"
+                    android:textColor="@color/white"
+                    android:textSize="24sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="400dp"
+                    android:background="@color/cardview_dark_background"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</layout>

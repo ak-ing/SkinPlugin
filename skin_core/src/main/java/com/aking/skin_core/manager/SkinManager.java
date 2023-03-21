@@ -1,8 +1,5 @@
 package com.aking.skin_core.manager;
 
-import static android.util.TypedValue.TYPE_DIMENSION;
-import static com.aking.skin_core.widget.Constants.HOOK_ASSET_NAME;
-
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -11,8 +8,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
@@ -26,11 +21,15 @@ import com.aking.skin_core.i.ISkinMethodHolder;
 import com.aking.skin_core.widget.AssetsUtil;
 import com.aking.skin_core.widget.Constants;
 import com.aking.skin_core.widget.SkinActivityLifecycleCallback;
+import com.aking.skin_core.widget.SkinMethod;
 import com.aking.skin_core.widget.SpUtil;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.util.TypedValue.TYPE_DIMENSION;
+import static com.aking.skin_core.widget.Constants.HOOK_ASSET_NAME;
 
 /**
  * Created by Rick at 2023/3/15 21:15.
@@ -52,14 +51,10 @@ public enum SkinManager {
 
     SkinManager() {
         mSkinAttrHolder = new HashMap<>();
-        ISkinMethodHolder<TextView, Integer> setTextColor = TextView::setTextColor;
-        ISkinMethodHolder<View, Drawable> setBackground = View::setBackground;
-        ISkinMethodHolder<ImageView, Drawable> setImageDrawable = ImageView::setImageDrawable;
-        ISkinMethodHolder<TextView, CharSequence> setText = TextView::setText;
-        mSkinAttrHolder.put(Constants.SKIN_ATTR_BACKGROUND, setBackground);
-        mSkinAttrHolder.put(Constants.SKIN_ATTR_SRC, setImageDrawable);
-        mSkinAttrHolder.put(Constants.SKIN_ATTR_TEXT_COLOR, setTextColor);
-        mSkinAttrHolder.put(Constants.SKIN_ATTR_TEXT, setText);
+        mSkinAttrHolder.put(Constants.SKIN_ATTR_BACKGROUND, SkinMethod.setBackground);
+        mSkinAttrHolder.put(Constants.SKIN_ATTR_SRC, SkinMethod.setImageDrawable);
+        mSkinAttrHolder.put(Constants.SKIN_ATTR_TEXT_COLOR, SkinMethod.setTextColor);
+        mSkinAttrHolder.put(Constants.SKIN_ATTR_TEXT, SkinMethod.setText);
     }
 
     void init(Application context) {
@@ -254,8 +249,7 @@ public enum SkinManager {
             return typedValue.getFloat();
         }
         if (identifier == INVALID_ID) return appResources.getDimension(dimensionId);
-        float dimension = mResources.getDimension(identifier);
-        return dimension;
+        return mResources.getDimension(identifier);
     }
 
     /**

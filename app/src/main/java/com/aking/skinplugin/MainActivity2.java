@@ -24,7 +24,7 @@ public class MainActivity2 extends SkinBaseActivity {
 
     private void initView() {
         mBinding.btnChange.setOnClickListener(v -> {
-            if (!App.checkPermission(this)) return;
+            if (!Permission.checkPermission(this)) return;
             if (SkinManager.INSTANCE.isSkinState()) {
                 SkinManager.INSTANCE.loadDefault();
             } else {

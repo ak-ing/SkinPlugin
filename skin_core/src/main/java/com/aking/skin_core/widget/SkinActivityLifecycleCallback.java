@@ -21,7 +21,9 @@ public class SkinActivityLifecycleCallback implements Application.ActivityLifecy
     @Override
     public void notifySkinHolder() {
         for (Activity activity : mActivities) {
-            ((SkinBaseActivity) activity).mFactory.apply();
+            if (activity instanceof SkinBaseActivity) {
+                ((SkinBaseActivity) activity).mFactory.apply();
+            }
         }
     }
 
@@ -61,6 +63,8 @@ public class SkinActivityLifecycleCallback implements Application.ActivityLifecy
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
         if (activity instanceof SkinBaseActivity) {
+            ((SkinBaseActivity) activity).mFactory.destroy();
+            ((SkinBaseActivity) activity).mFactory = null;
             mActivities.remove(activity);
         }
     }

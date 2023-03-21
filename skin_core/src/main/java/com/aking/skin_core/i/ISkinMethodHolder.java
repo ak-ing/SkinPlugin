@@ -3,7 +3,7 @@ package com.aking.skin_core.i;
 import android.view.View;
 
 import com.aking.skin_core.domain.MethodAcceptAndThen;
-import com.aking.skin_core.domain.MethodProxy;
+import com.aking.skin_core.domain.MethodAcceptProxy;
 
 import java.util.Objects;
 
@@ -20,7 +20,7 @@ public interface ISkinMethodHolder<V extends View, U> {
     /**
      * 返回{@link MethodAcceptAndThen}对象,按顺序执行此操作，后跟一个 after 操作。
      * <br/>
-     * 请注意：必须要给目标View设置[app:skinMethodEnable="true"]属性
+     * 请注意：必须要给目标View设置[app:skinMethodTag=“[String]”]属性
      *
      * @param after 此操作后要执行的操作
      * @return {@link MethodAcceptAndThen}
@@ -31,14 +31,16 @@ public interface ISkinMethodHolder<V extends View, U> {
     }
 
     /**
-     * 返回{@link MethodProxy}对象,代理当前方法，不会触发{@link #accept(View, Object)}的执行.
+     * 返回{@link MethodAcceptProxy}对象,代理当前方法，不会触发{@link #accept(View, Object)}的执行.
      * 需实现自己逻辑
+     * <p>
+     * 请注意：必须要给目标View设置[app:skinMethodTag=“[String]”]属性
      *
      * @param proxy 代理当前操作的包装对象
-     * @return {@link MethodProxy}
+     * @return {@link MethodAcceptProxy}
      */
-    default MethodProxy<V, U> proxy(IMethodProxyCallback<V, U> proxy) {
+    default MethodAcceptProxy<V, U> proxy(IMethodProxyCallback<V, U> proxy) {
         Objects.requireNonNull(proxy);
-        return new MethodProxy<>(this, proxy);
+        return new MethodAcceptProxy<>(this, proxy);
     }
 }

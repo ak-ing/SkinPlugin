@@ -2,6 +2,7 @@ package com.aking.skin_core.domain;
 
 import android.view.View;
 
+import com.aking.skin_core.R;
 import com.aking.skin_core.i.ISkinMethodHolder;
 
 import java.util.Objects;
@@ -23,13 +24,10 @@ public class MethodAcceptAndThen<V extends View, U> implements ISkinMethodHolder
     @Override
     public void accept(V v, U u) {
         mAccept.accept(v, u);
-    }
-
-    public void acceptThenAfter(V v, U u) {
-        mAccept.accept(v, u);
         Objects.requireNonNull(mAfter);
-        mAfter.accept(v, u);
-
+        if (v.getTag(R.id.skinMethodTagID) != null) {
+            mAfter.accept(v, u);
+        }
     }
 
 }

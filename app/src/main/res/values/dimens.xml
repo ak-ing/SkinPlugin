@@ -17,7 +17,6 @@
     <dimen name="dimen_wrap_content">-2</dimen>
 
     <!--Customize-->
-    <dimen name="dimen_width_test">100dp</dimen>
-    <dimen name="dimen_height_test">100dp</dimen>
+    <dimen name="dimen_text_size">20sp</dimen>
 
 </resources>

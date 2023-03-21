@@ -3,7 +3,7 @@
 
     <application>
         <provider
-            android:name=".manager.ContextProvider"
+            android:name="com.aking.skin_core.manager.ContextProvider"
             android:authorities="${applicationId}.ContextProvider"
             android:exported="false" />
     </application>

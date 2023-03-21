@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">SkinPlugin</string>
 
-    <string name="text_str_test">String资源和Dimension已替换：哈哈哈</string>
+    <string name="text_str_test">String资源已替换：哈哈哈</string>
 </resources>

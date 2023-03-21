@@ -1,7 +1,6 @@
 package com.aking.skinplugin;
 
 import android.os.Bundle;
-import android.os.Environment;
 
 import androidx.databinding.DataBindingUtil;
 
@@ -27,9 +26,9 @@ public class MainActivity2 extends SkinBaseActivity {
         mBinding.btnChange.setOnClickListener(v -> {
             if (!App.checkPermission(this)) return;
             if (SkinManager.INSTANCE.isSkinState()) {
-                SkinManager.INSTANCE.reset();
+                SkinManager.INSTANCE.loadDefault();
             } else {
-                SkinManager.INSTANCE.loadSkinFile(Environment.getExternalStorageDirectory() + "/skin.apk");
+                SkinManager.INSTANCE.loadSkinAssets("skin.apk");
             }
         });
         MAdapter mAdapter = new MAdapter();

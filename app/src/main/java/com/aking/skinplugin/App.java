@@ -5,16 +5,14 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.Settings;
-import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
 
-import com.aking.skin_core.domain.MethodAcceptAndThen;
 import com.aking.skin_core.i.ISkinMethodHolder;
 import com.aking.skin_core.manager.SkinManager;
 
@@ -24,21 +22,6 @@ import com.aking.skin_core.manager.SkinManager;
  * @Description:
  */
 public class App extends Application {
-
-    @RequiresApi(api = Build.VERSION_CODES.Q)
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        ISkinMethodHolder<EditText, Drawable> setTextCursorDrawable = EditText::setTextCursorDrawable;
-
-        MethodAcceptAndThen<EditText, Drawable> methodHolder = setTextCursorDrawable.andThen(new ISkinMethodHolder<EditText, Drawable>() {
-            @Override
-            public void accept(EditText editText, Drawable drawable) {
-
-            }
-        });
-        SkinManager.INSTANCE.addSkinAttrHolder("textCursorDrawable", methodHolder);
-    }
 
     public static boolean checkPermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -51,11 +34,16 @@ public class App extends Application {
                 return false;
             }
         } else {
-            if (context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                return true;
-            } else {
-                return false;
-            }
+            return context.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.Q)
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        ISkinMethodHolder<TextView, Float> setTextSize = TextView::setTextSize;
+        SkinManager.INSTANCE.addSkinAttrHolder("textSize", setTextSize);
     }
 }

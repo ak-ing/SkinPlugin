@@ -3,14 +3,12 @@ package com.aking.skin_core.domain;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.arch.core.util.Function;
 
 import com.aking.skin_core.i.IExceptFunction;
 import com.aking.skin_core.i.ISkinMethodHolder;
 import com.aking.skin_core.manager.SkinManager;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
@@ -20,14 +18,12 @@ import java.util.List;
  */
 public class SkinViewHolder {
 
-    private final boolean methodTag;
     //mView需要换肤的属性对象集合
     private final List<SkinAttributeItem> mSkinAttributeItems;
-    private View mView;
+    private final WeakReference<View> mView;
 
-    public SkinViewHolder(View view, boolean methodTag, List<SkinAttributeItem> skinAttributeItems) {
-        mView = view;
-        this.methodTag = methodTag;
+    public SkinViewHolder(View view, List<SkinAttributeItem> skinAttributeItems) {
+        mView = new WeakReference<>(view);
         mSkinAttributeItems = skinAttributeItems;
     }
 
@@ -36,7 +32,7 @@ public class SkinViewHolder {
      */
     public void apply() {
         for (SkinAttributeItem attributeItem : mSkinAttributeItems) {
-            if (mView == null) return;
+            if (mView.get() == null) return;
             String typeName = attributeItem.getTypeName();
             ISkinMethodHolder<? extends View, ?> methodHolder = attributeItem.getAttrMethodHolder();
             if ("color".equals(typeName)) {
@@ -45,45 +41,33 @@ public class SkinViewHolder {
                 tryExec(() -> applySkinColor(attributeItem, methodHolder));
             } else if ("drawable".equals(typeName) || "mipmap".equals(typeName)) {
                 tryExec(() -> applySkinBackground(attributeItem, methodHolder));
-            } else if ("dimen".equals(typeName)) {
-                tryExec(() -> applySkinDimen(attributeItem, methodHolder));
             } else if ("string".equals(typeName)) {
                 tryExec(() -> applySkinString(attributeItem, methodHolder));
+            } else if ("dimen".equals(typeName)) {
+                tryExec(() -> applyDimension(attributeItem, methodHolder));
             }
         }
     }
 
     private void applySkinBackground(SkinAttributeItem attributeItem, ISkinMethodHolder methodHolder) {
         Drawable drawable = SkinManager.INSTANCE.getDrawable(attributeItem.getResId());
-        methodHolder.accept(mView, drawable);
-        handlerAfter(methodHolder, drawable);
+        methodHolder.accept(mView.get(), drawable);
     }
 
     private void applySkinColor(SkinAttributeItem attributeItem, ISkinMethodHolder methodHolder) {
         int color = SkinManager.INSTANCE.getColor(attributeItem.getResId());
-        methodHolder.accept(mView, color);
-        handlerAfter(methodHolder, color);
+        methodHolder.accept(mView.get(), color);
     }
 
     private void applySkinString(SkinAttributeItem attributeItem, ISkinMethodHolder methodHolder) {
         String string = SkinManager.INSTANCE.getString(attributeItem.getResId());
-        methodHolder.accept(mView, string);
-        handlerAfter(methodHolder, string);
+        methodHolder.accept(mView.get(), string);
     }
 
-    private void applySkinDimen(SkinAttributeItem attributeItem, ISkinMethodHolder methodHolder) {
+    private void applyDimension(SkinAttributeItem attributeItem, ISkinMethodHolder methodHolder) {
         float dimension = SkinManager.INSTANCE.getDimension(attributeItem.getResId());
-        Function<View, ViewGroup.LayoutParams> getLayoutParams = View::getLayoutParams;
-        ViewGroup.LayoutParams layoutParams = getLayoutParams.apply(mView);
-        if ("layout_width".equals(attributeItem.getAttrName())) {
-            layoutParams.width = (int) dimension;
-        } else if ("layout_height".equals(attributeItem.getAttrName())) {
-            layoutParams.height = (int) dimension;
-        }
-        methodHolder.accept(mView, layoutParams);
-        handlerAfter(methodHolder, layoutParams);
+        methodHolder.accept(mView.get(), dimension);
     }
-
 
     /**
      * 尝试设置Color类型的Drawable.
@@ -92,8 +76,7 @@ public class SkinViewHolder {
     private boolean tryColorDrawable(SkinAttributeItem attributeItem, ISkinMethodHolder methodHolder) {
         try {
             Drawable drawable = SkinManager.INSTANCE.getDrawable(attributeItem.getResId());
-            methodHolder.accept(mView, drawable);
-            handlerAfter(methodHolder, drawable);
+            methodHolder.accept(mView.get(), drawable);
             return true;
         } catch (ClassCastException e) {
             //忽略
@@ -102,6 +85,7 @@ public class SkinViewHolder {
         }
         return false;
     }
+
 
     /**
      * 方法异常包装
@@ -114,17 +98,8 @@ public class SkinViewHolder {
         }
     }
 
-    private void handlerAfter(ISkinMethodHolder methodHolder, Object o) {
-        if (methodTag && methodHolder instanceof MethodAcceptAndThen) {
-            ((MethodAcceptAndThen) methodHolder).acceptThenAfter(mView, o);
-        }
-    }
-
     public View getView() {
-        return mView;
+        return mView.get();
     }
 
-    public void setView(View view) {
-        mView = view;
-    }
 }

@@ -39,13 +39,13 @@ public class SkinFactory implements LayoutInflater.Factory2 {
             "android.webkit."
     };
     private static final ClassLoader BOOT_CLASS_LOADER = LayoutInflater.class.getClassLoader();
+    private final List<SkinViewHolder> mSkinViewHolders = new ArrayList<>();
     /**
      * 用到AppCompatDelegate的onCreateView，通过mAppCompatViewInflater对象
      * 的createView方法构造AppCompat(兼容View) [AppCompatViewInflater 119行]
      * {@link androidx.appcompat.app.AppCompatViewInflater}
      */
-    private final AppCompatDelegate mDelegate;
-    private final List<SkinViewHolder> mSkinViewHolders = new ArrayList<>();
+    private AppCompatDelegate mDelegate;
 
     public SkinFactory(AppCompatDelegate delegate) {
         mDelegate = delegate;
@@ -123,17 +123,15 @@ public class SkinFactory implements LayoutInflater.Factory2 {
         if (a.getBoolean(R.styleable.skinAble_skinEnable, SkinManager.INSTANCE.isSkinGlobalEnable())) {
             List<SkinAttributeItem> skinItems = new ArrayList<>();
             for (int i = 0; i < attrs.getAttributeCount(); i++) {
+                //拿到引用Id值 @11111111
+                String attributeValue = attrs.getAttributeValue(i);
+                if (attributeValue == null || !attributeValue.startsWith("@")) continue;
                 //判断是否为需要换肤的属性
                 String attrName = getNeedSkinAttribute(attrs.getAttributeName(i));
                 if (attrName != null) {
-                    //拿到Id值 @11111111
-                    String attributeValue = attrs.getAttributeValue(i);
-                    if (!attributeValue.startsWith("@")) continue;
                     int resId = Integer.parseInt(attributeValue.substring(1));
                     try {
                         String typeName = resources.getResourceTypeName(resId);
-                        //Dimension检查
-                        if (isDimenAndDisable(typeName, a)) continue;
                         String entryName = resources.getResourceEntryName(resId);
                         ISkinMethodHolder<? extends View, ?> methodHolder = SkinManager.INSTANCE.mSkinAttrHolder.get(attrName);
                         skinItems.add(new SkinAttributeItem(attrName, typeName, entryName, resId, methodHolder));
@@ -144,10 +142,15 @@ public class SkinFactory implements LayoutInflater.Factory2 {
             }
             //当存在需要换肤的属性时
             if (skinItems.size() > 0) {
-                boolean methodTag = a.getBoolean(R.styleable.skinAble_skinMethodEnable, false);
-                SkinViewHolder skinViewHolder = new SkinViewHolder(view, methodTag, skinItems);
+                String methodTag = a.getString(R.styleable.skinAble_skinMethodTag);
+                if (methodTag != null) {
+                    view.setTag(R.id.skinMethodTagID, methodTag);
+                }
+                SkinViewHolder skinViewHolder = new SkinViewHolder(view, skinItems);
                 mSkinViewHolders.add(skinViewHolder);
-                skinViewHolder.apply();
+                if (SkinManager.INSTANCE.isSkinState()) {
+                    skinViewHolder.apply();
+                }
             }
         }
         a.recycle();
@@ -160,14 +163,15 @@ public class SkinFactory implements LayoutInflater.Factory2 {
         return null;
     }
 
-    private boolean isDimenAndDisable(String typeName, TypedArray a) {
-        return "dimen".equals(typeName) && !a.getBoolean(R.styleable.skinAble_skinDimenEnable, false);
-    }
-
     public void apply() {
         for (SkinViewHolder skinViewHolder : mSkinViewHolders) {
             skinViewHolder.apply();
         }
+    }
+
+    public void destroy() {
+        mSkinViewHolders.clear();
+        mDelegate = null;
     }
 
     private boolean verifyClassLoader(Context context, Constructor<? extends View> constructor) {

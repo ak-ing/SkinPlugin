@@ -11,7 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_blue"
-        app:skinEnable="true"
         tools:context=".MainActivity">
 
         <com.google.android.material.button.MaterialButton
@@ -29,26 +28,14 @@
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="@dimen/dimen_width_test"
-            android:layout_height="@dimen/dimen_height_test"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginTop="50dp"
             android:background="@drawable/avatar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnStep"
-            app:skinDimenEnable="true" />
+            app:layout_constraintTop_toBottomOf="@+id/btnStep" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Dimension(size)资源变化"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            app:backgroundTint="@color/color_blue_50"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <FrameLayout
             android:id="@+id/fragment_container"
@@ -68,17 +55,15 @@
             android:layout_marginTop="100dp"
             android:src="@drawable/avatar"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:skinDimenEnable="true" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:layout_width="38dp"
             android:layout_height="38dp"
-            android:layout_marginTop="@dimen/dimen_height_test"
+            android:layout_marginTop="100dp"
             android:layout_marginEnd="38dp"
             android:src="@drawable/avatar"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:skinDimenEnable="true" />
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

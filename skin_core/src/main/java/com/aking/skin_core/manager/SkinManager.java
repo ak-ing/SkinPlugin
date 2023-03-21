@@ -1,5 +1,8 @@
 package com.aking.skin_core.manager;
 
+import static android.util.TypedValue.TYPE_DIMENSION;
+import static com.aking.skin_core.widget.Constants.HOOK_ASSET_NAME;
+
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -8,7 +11,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +23,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.aking.skin_core.i.ISkinMethodHolder;
+import com.aking.skin_core.widget.AssetsUtil;
+import com.aking.skin_core.widget.Constants;
 import com.aking.skin_core.widget.SkinActivityLifecycleCallback;
 import com.aking.skin_core.widget.SpUtil;
 
@@ -28,13 +32,10 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import static android.util.TypedValue.TYPE_DIMENSION;
-import static com.aking.skin_core.widget.Constants.HOOK_ASSET_NAME;
-
 /**
  * Created by Rick at 2023/3/15 21:15.
  * <p>
- * Description: 去加载资源包文件，能够从中获取想要的资源
+ * Description: 换肤 {@link #INSTANCE}
  */
 public enum SkinManager {
 
@@ -54,14 +55,11 @@ public enum SkinManager {
         ISkinMethodHolder<TextView, Integer> setTextColor = TextView::setTextColor;
         ISkinMethodHolder<View, Drawable> setBackground = View::setBackground;
         ISkinMethodHolder<ImageView, Drawable> setImageDrawable = ImageView::setImageDrawable;
-        ISkinMethodHolder<View, ViewGroup.LayoutParams> setLayoutParams = View::setLayoutParams;
         ISkinMethodHolder<TextView, CharSequence> setText = TextView::setText;
-        mSkinAttrHolder.put("textColor", setTextColor);
-        mSkinAttrHolder.put("background", setBackground);
-        mSkinAttrHolder.put("src", setImageDrawable);
-        mSkinAttrHolder.put("layout_width", setLayoutParams);
-        mSkinAttrHolder.put("layout_height", setLayoutParams);
-        mSkinAttrHolder.put("text", setText);
+        mSkinAttrHolder.put(Constants.SKIN_ATTR_BACKGROUND, setBackground);
+        mSkinAttrHolder.put(Constants.SKIN_ATTR_SRC, setImageDrawable);
+        mSkinAttrHolder.put(Constants.SKIN_ATTR_TEXT_COLOR, setTextColor);
+        mSkinAttrHolder.put(Constants.SKIN_ATTR_TEXT, setText);
     }
 
     void init(Application context) {
@@ -114,9 +112,22 @@ public enum SkinManager {
 
 
     /**
+     * 加载Assets目录下的资源包，优先使用{@link #loadSkinFile(String)}来加载.
+     * <p>
+     * 此操作会将Assets目录下的文件复制一份到缓存文件夹
+     *
+     * @param name 资源包文件名
+     */
+    public void loadSkinAssets(String name) {
+        String cachePath = AssetsUtil.copySkinFromAssets(mContext, name);
+        loadSkinFile(cachePath);
+    }
+
+
+    /**
      * 重置换肤，切换为默认
      */
-    public void reset() {
+    public void loadDefault() {
         if (mResources != null) {
             SpUtil.INSTANCE.putPath("");
             mResources = null;
@@ -150,6 +161,7 @@ public enum SkinManager {
             return mResources;
         }
     }
+
 
     /**
      * 是否为换肤状态

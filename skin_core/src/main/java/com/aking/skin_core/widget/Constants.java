@@ -5,14 +5,11 @@ package com.aking.skin_core.widget;
  * Description:
  */
 public class Constants {
-    /**
-     * 参数类型：资源对象/值
-     */
-    public static final int TYPE_VALUE = 1;
-    /**
-     * 参数类型：资源ID
-     */
-    public static final int TYPE_RES_ID = 2;
-
     public static final String HOOK_ASSET_NAME = "addAssetPath";
+    public static final String SKIN_PATH_CACHE = "skinCache";
+
+    public static final String SKIN_ATTR_BACKGROUND = "background";
+    public static final String SKIN_ATTR_SRC = "src";
+    public static final String SKIN_ATTR_TEXT_COLOR = "textColor";
+    public static final String SKIN_ATTR_TEXT = "text";
 }

@@ -203,7 +203,7 @@ SkinManager.INSTANCE.addSkinAttrHolder("setTextColor", setTextColorAndThen);
 
 ### MethodAcceptProxy
 使用`ISkinMethodHolder.proxy()`来转换成`MethodAcceptProxy`对象
-这是对`ISkinMethodHolder`的功能拓展，的功能拓展，代理当前`set`方法，实现自己逻辑.
+这是对`ISkinMethodHolder`的功能拓展，代理当前`set`方法，实现自己逻辑.
 
 <br>
 

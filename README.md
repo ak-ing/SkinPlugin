@@ -59,7 +59,8 @@ SkinManager.INSTANCE.loadSkinAssets("skin.apk");
 <br>
 
 
-***使用_`app:skinEnable="true or false"` 来决定View是否开启换肤。优先级大于`setSkinGlobalEnable`,默认全局换肤***
+***使用`app:skinEnable="true or false"` 来决定View是否开启换肤。  
+优先级大于`setSkinGlobalEnable`,默认全局开启***
 
 <br>
 <br>

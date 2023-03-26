@@ -13,6 +13,10 @@ Android 动态换肤框架，支持动态加载插件资源，无需重启Activi
 
 https://user-images.githubusercontent.com/65901383/226703180-b9e8e8b9-b5ae-496d-a5a8-185d2a8203f1.mp4
 
+<br>
+
+[下载演示Demo](http://81.71.83.180/apk/SkinPlugin.apk)
+
 
 
 <br>

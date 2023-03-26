@@ -30,6 +30,21 @@ public class App extends Application {
         //文字大小
         ISkinMethodHolder<TextView, Float> setTextSize = this::setTextSize;
         SkinManager.INSTANCE.addSkinAttrHolder("textSize", setTextSize);
+
+//        //文字颜色
+//        ISkinMethodHolder<TextView, Integer> setTextColor = TextView::setTextColor;
+//        MethodAcceptAndThen<TextView, Integer> setTextColorAndThen = setTextColor.andThen((textView, integer) -> {
+//            if ("title".equals(textView.getTag(R.id.skinMethodTagID))) {
+//                textView.setText("春节主题皮肤");
+//            }
+//        });
+//        SkinManager.INSTANCE.addSkinAttrHolder("setTextColor", setTextColorAndThen);
+//
+//        ISkinMethodHolder<View, Drawable> setBackground = View::setBackground;
+//        MethodAcceptProxy<View, Drawable> setBackgroundProxy = setBackground.proxy((view, value, methodHolder) -> {
+//
+//        });
+//        SkinManager.INSTANCE.addSkinAttrHolder("setBackground", setBackgroundProxy);
     }
 
     public void setTextSize(TextView view, float px) {

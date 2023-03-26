@@ -9,10 +9,9 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.aking.skin_core.manager.SkinManager;
-
 /**
  * Created by Rick at 2023/3/19 14:16.
+ *
  * @Description:
  */
 class MAdapter extends ListAdapter<String, MAdapter.InnerHolder> {

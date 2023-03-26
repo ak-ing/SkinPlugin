@@ -89,7 +89,7 @@ public <T> void addSkinAttrHolder(String attrName, ISkinMethodHolder<? extends V
 <br>
 
 **这个方法接收两个参数**
-1.第一个参数是属性名，如：
+1. 第一个参数是属性名，如：
 ```xml
 <EditText
   android:id="@+id/editText"
@@ -103,7 +103,7 @@ public <T> void addSkinAttrHolder(String attrName, ISkinMethodHolder<? extends V
 
 <br>
 
-2.第二个参数是属性`set`方法的`方法引用`，如 `EditText::setHintTextColor`
+2. 第二个参数是属性`set`方法的`方法引用`，如 `EditText::setHintTextColor`
 ```java
 示例
 ISkinMethodHolder<EditText, Integer> setHintTextColor = EditText::setHintTextColor;

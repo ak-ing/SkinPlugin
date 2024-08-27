@@ -1,6 +1,7 @@
 package com.aking.skin_core.domain;
 
 import android.graphics.drawable.Drawable;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -31,21 +32,28 @@ public class SkinViewHolder {
      * 换肤
      */
     public void apply() {
-        for (SkinAttributeItem attributeItem : mSkinAttributeItems) {
-            if (mView.get() == null) return;
-            String typeName = attributeItem.getTypeName();
-            ISkinMethodHolder<? extends View, ?> methodHolder = attributeItem.getAttrMethodHolder();
-            if ("color".equals(typeName)) {
-                //如果设置的是Color类型的Drawable.
-                if (tryColorDrawable(attributeItem, methodHolder)) continue;
-                tryExec(() -> applySkinColor(attributeItem, methodHolder));
-            } else if ("drawable".equals(typeName) || "mipmap".equals(typeName)) {
-                tryExec(() -> applySkinBackground(attributeItem, methodHolder));
-            } else if ("string".equals(typeName)) {
-                tryExec(() -> applySkinString(attributeItem, methodHolder));
-            } else if ("dimen".equals(typeName)) {
-                tryExec(() -> applyDimension(attributeItem, methodHolder));
+        Runnable runnable = () -> {
+            for (SkinAttributeItem attributeItem : mSkinAttributeItems) {
+                String typeName = attributeItem.getTypeName();
+                ISkinMethodHolder<? extends View, ?> methodHolder = attributeItem.getAttrMethodHolder();
+                if ("color".equals(typeName)) {
+                    //如果设置的是Color类型的Drawable.
+                    if (tryColorDrawable(attributeItem, methodHolder)) continue;
+                    tryExec(() -> applySkinColor(attributeItem, methodHolder));
+                } else if ("drawable".equals(typeName) || "mipmap".equals(typeName)) {
+                    tryExec(() -> applySkinBackground(attributeItem, methodHolder));
+                } else if ("string".equals(typeName)) {
+                    tryExec(() -> applySkinString(attributeItem, methodHolder));
+                } else if ("dimen".equals(typeName)) {
+                    tryExec(() -> applyDimension(attributeItem, methodHolder));
+                }
             }
+        };
+
+        if (Looper.getMainLooper().getThread() == Thread.currentThread()) {
+            runnable.run();
+        } else {
+            mView.get().post(runnable);
         }
     }
 

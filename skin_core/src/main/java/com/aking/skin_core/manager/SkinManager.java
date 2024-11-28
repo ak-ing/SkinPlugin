@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
@@ -91,8 +92,7 @@ public enum SkinManager {
             addAssetPath.setAccessible(true);
             addAssetPath.invoke(assetManager, path);
             //创建资源对象，管理资源包里面的资源
-            mResources = new Resources(assetManager, mContext.getResources().getDisplayMetrics(),
-                    mContext.getResources().getConfiguration());
+            mResources = new Resources(assetManager, appResources.getDisplayMetrics(), appResources.getConfiguration());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,7 +188,10 @@ public enum SkinManager {
         return mResources == null;
     }
 
-
+    void onConfigChanged(Configuration newConfig) {
+        if (resourceIsNull()) return;
+        mResources.updateConfiguration(newConfig, appResources.getDisplayMetrics());
+    }
 
 
     /* -------------------------------匹配资源的方法------------------------------ */

@@ -3,8 +3,10 @@ package com.aking.skin_core.manager;
 import android.app.Application;
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +22,13 @@ public class ContextProvider extends ContentProvider {
         SpUtil.INSTANCE.init(getContext());
         SkinManager.INSTANCE.init((Application) getContext().getApplicationContext());
         return false;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.i("SkinPlugin", "ContextProvider [onConfigurationChanged]");
+        SkinManager.INSTANCE.onConfigChanged(newConfig);
     }
 
     @Nullable

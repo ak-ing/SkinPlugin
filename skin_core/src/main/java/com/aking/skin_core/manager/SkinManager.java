@@ -25,8 +25,12 @@ import com.aking.skin_core.widget.SkinActivityLifecycleCallback;
 import com.aking.skin_core.widget.SkinMethod;
 import com.aking.skin_core.widget.SpUtil;
 
+import com.aking.skin_core.domain.SkinViewHolder;
+
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static android.util.TypedValue.TYPE_DIMENSION;
@@ -43,6 +47,8 @@ public enum SkinManager {
 
     public static final int INVALID_ID = 0;
     final Map<String, ISkinMethodHolder<? extends View, ?>> mSkinAttrHolder;
+    // 动态添加的 View 的 SkinViewHolder 列表
+    private final List<SkinViewHolder> mDynamicSkinViewHolders = new ArrayList<>();
     private Application mContext;
     private Resources mResources;
     private Resources appResources;
@@ -182,6 +188,39 @@ public enum SkinManager {
      */
     public void setSkinGlobalEnable(boolean enable) {
         mSkinGlobalEnable = enable;
+    }
+
+    /**
+     * 添加动态 View 的 SkinViewHolder
+     *
+     * @param holder SkinViewHolder 对象
+     */
+    public void addDynamicSkinViewHolder(SkinViewHolder holder) {
+        if (holder != null && !mDynamicSkinViewHolders.contains(holder)) {
+            mDynamicSkinViewHolders.add(holder);
+            // 如果当前已处于换肤状态，立即应用
+            if (isSkinState()) {
+                holder.apply();
+            }
+        }
+    }
+
+    /**
+     * 移除动态 View 的 SkinViewHolder
+     *
+     * @param holder SkinViewHolder 对象
+     */
+    public void removeDynamicSkinViewHolder(SkinViewHolder holder) {
+        mDynamicSkinViewHolders.remove(holder);
+    }
+
+    /**
+     * 应用所有动态 ViewHolder 的换肤
+     */
+    public void applyDynamicSkinViewHolders() {
+        for (SkinViewHolder holder : mDynamicSkinViewHolders) {
+            holder.apply();
+        }
     }
 
     private boolean resourceIsNull() {

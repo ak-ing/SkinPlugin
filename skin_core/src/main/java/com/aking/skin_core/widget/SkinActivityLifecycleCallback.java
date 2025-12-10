@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.aking.skin_core.i.ISkinNotifyEvent;
+import com.aking.skin_core.manager.SkinManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,11 +21,14 @@ public class SkinActivityLifecycleCallback implements Application.ActivityLifecy
 
     @Override
     public void notifySkinHolder() {
+        // 通知所有 Activity 的 SkinFactory
         for (Activity activity : mActivities) {
             if (activity instanceof SkinBaseActivity) {
                 ((SkinBaseActivity) activity).mFactory.apply();
             }
         }
+        // 通知动态添加的 ViewHolder
+        SkinManager.INSTANCE.applyDynamicSkinViewHolders();
     }
 
     @Override

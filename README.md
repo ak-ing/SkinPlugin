@@ -215,7 +215,7 @@ SkinManager.INSTANCE.addSkinAttrHolder("setTextColor", setTextColorAndThen);
 示例
 ISkinMethodHolder<View, Drawable> setBackground = View::setBackground;
 MethodAcceptProxy<View, Drawable> setBackgroundProxy = setBackground.proxy((view, value, methodHolder) -> {
-    if ("mProxyTag".equals(textView.getTag(R.id.skinMethodTagID))) {
+    if ("mProxyTag".equals(view.getTag(R.id.skinMethodTagID))) {
         //You can do something
     }
 });
@@ -230,18 +230,87 @@ SkinManager.INSTANCE.addSkinAttrHolder("setBackground", setBackgroundProxy);
 <br>
 <br>
 <br>
+
+## 动态添加View换肤
+
+对于动态添加到布局中的 `View`（例如，在 Java 或 Kotlin 代码中创建的 `View`），可以使用 `SkinBinder` 来为其绑定换肤能力。这可以确保即使是动态创建的视图也能够响应主题变化。
+
+### 使用 SkinBinder
+
+`SkinBinder` 提供了一个便捷的 `bind` 方法，允许您为动态创建的 `View` 注册一个或多个换肤属性。当皮肤切换时，绑定的属性会自动更新。
+
+```java
+// 方式1：绑定到 View 生命周期（推荐）
+SkinBinder.bind(textView)
+    .bindColor(R.color.text_color, TextView::setTextColor)
+    .bindDrawable(R.drawable.bg, View::setBackground)
+    .bind();
+// 方式2：绑定到 LifecycleOwner（Activity/Fragment）
+SkinBinder.bind(textView)
+    .bindColor(R.color.text_color, TextView::setTextColor)
+    .bindTo(lifecycleOwner);
+```
+
+当 `View` 不再需要时（例如，当包含它的 `Activity` 或 `Fragment` 被销毁时），`SkinBinder` 会自动处理解绑，无需手动操作，从而避免内存泄漏。
+
+<br>
+<br>
+<br>
+
+## 换肤监听
+
+如果您需要在换肤发生时执行自定义逻辑（例如更新非 View 组件、刷新缓存等），可以注册换肤监听。
+
+### 注册与注销监听
+
+建议在Activity/Fragment中创建`OnSkinChangeListener`实例，并在生命周期方法中注册和注销，以避免内存泄漏。
+
+```java
+// 1. 创建监听器实例
+private final OnSkinChangeListener mSkinChangeListener = new OnSkinChangeListener() {
+    @Override
+    public void onSkinChanged(boolean isDefault) {
+        // ...
+    }
+};
+
+// 2. 在适当的时候注册监听 (例如 onCreate)
+// 注册时会立即回调一次 onSkinChanged
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // ...
+    SkinManager.INSTANCE.addSkinChangeListener(mSkinChangeListener);
+}
+
+// 3. 在不再需要监听时注销 (例如 onDestroy)
+@Override
+protected void onDestroy() {
+    super.onDestroy();
+    SkinManager.INSTANCE.removeSkinChangeListener(mSkinChangeListener);
+}
+```
+
+
+<br>
+<br>
+<br>
 <br>
 <br>
 
 
 ## API参考
 
-| loadDefault() | 重置换肤，切换为默认 |
+| 方法 | 说明 |
 | --- | --- |
+| loadDefault() | 重置换肤，切换为默认 |
+| SkinBinder.bind(...) | 为动态创建的`View`绑定换肤属性，并自动管理生命周期。 |
 | getSkinResource() | 获取资源包的资源对象，如果为空，返回APP的资源对象 |
 | isSkinState() | 是否为换肤状态 |
 | isSkinGlobalEnable() | 是否已启用全局换肤 |
 | setSkinGlobalEnable(boolean enable) | 设置是否启用全局换肤开关，默认为true,可通过{app:skinEnable="boolean"}属性单独给View设置 |
+| addSkinChangeListener(OnSkinChangeListener listener) | 注册换肤监听，注册时会立即回调一次 |
+| removeSkinChangeListener(OnSkinChangeListener listener) | 取消注册换肤监听 |
 | getColor() | 根据资源ID获取资源包中的Color颜色值 |
 | getDrawable() | 根据资源ID获取资源包中的drawable对象 |
 | getString() | 根据资源ID获取资源包中的字符 |

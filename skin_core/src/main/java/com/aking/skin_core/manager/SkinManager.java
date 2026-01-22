@@ -26,6 +26,7 @@ import com.aking.skin_core.widget.SkinMethod;
 import com.aking.skin_core.widget.SpUtil;
 
 import com.aking.skin_core.domain.SkinViewHolder;
+import com.aking.skin_core.i.OnSkinChangeListener;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -49,6 +50,8 @@ public enum SkinManager {
     final Map<String, ISkinMethodHolder<? extends View, ?>> mSkinAttrHolder;
     // 动态添加的 View 的 SkinViewHolder 列表
     private final List<SkinViewHolder> mDynamicSkinViewHolders = new ArrayList<>();
+    // 换肤监听列表
+    private final List<OnSkinChangeListener> mSkinChangeListeners = new ArrayList<>();
     private Application mContext;
     private Resources mResources;
     private Resources appResources;
@@ -105,7 +108,7 @@ public enum SkinManager {
 
         if (resourceIsNull()) return;
         //通知所有已缓存页面刷新
-        skinActivityLifecycleCallback.notifySkinHolder();
+        notifySkinChange();
 
         // 存储皮肤状态
         SpUtil.INSTANCE.putPath(path);
@@ -133,7 +136,7 @@ public enum SkinManager {
             SpUtil.INSTANCE.putPath("");
             mResources = null;
             mSkinPackageName = null;
-            skinActivityLifecycleCallback.notifySkinHolder();
+            notifySkinChange();
         }
     }
 
@@ -188,6 +191,35 @@ public enum SkinManager {
      */
     public void setSkinGlobalEnable(boolean enable) {
         mSkinGlobalEnable = enable;
+    }
+
+    /**
+     * 注册换肤监听
+     */
+    public void addSkinChangeListener(OnSkinChangeListener listener) {
+        if (listener != null && !mSkinChangeListeners.contains(listener)) {
+            mSkinChangeListeners.add(listener);
+            // 注册时立即回调一次，方便同步当前状态
+            listener.onSkinChanged(resourceIsNull());
+        }
+    }
+
+    /**
+     * 取消注册换肤监听
+     */
+    public void removeSkinChangeListener(OnSkinChangeListener listener) {
+        mSkinChangeListeners.remove(listener);
+    }
+
+    private void notifySkinChange() {
+        //通知所有已缓存页面刷新
+        if (skinActivityLifecycleCallback != null) {
+            skinActivityLifecycleCallback.notifySkinHolder();
+        }
+        boolean isDefault = resourceIsNull();
+        for (OnSkinChangeListener listener : mSkinChangeListeners) {
+            listener.onSkinChanged(isDefault);
+        }
     }
 
     /**
